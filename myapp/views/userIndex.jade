@@ -1,0 +1,42 @@
+extends layout
+block content
+  div(class="container" id="Cool" ng-app="mainApp")
+     h2#header("property"="pValue") Users
+     div
+        a(href="/users/add") Add User
+     h3 Response
+     table.table(ng-controller="TodoController")
+      thead
+        tr
+          th #
+          th Name
+          th Email
+          th Action
+      tbody
+        tr(ng-repeat="todo in todos" id="id-{{todo.id}}")
+          th(scope='row') {{ todo.id }}
+          td {{ todo.name }}
+          td {{ todo.email }}
+          td
+            button(ng-click="deleteData(todo.id)") delete
+            &nbsp;&nbsp;| &nbsp;&nbsp;
+            a(href="/users/update/{{todo.id}}") Edit
+
+  script(type="text/javascript").
+   var data=!{JSON.stringify(dataGet)};
+   var mainApp = angular.module("mainApp", []);
+   mainApp.controller("TodoController", function($scope, $http) {
+     $scope.todos = !{JSON.stringify(dataGet)};
+     $scope.deleteData = function($id){
+        var request = $http.delete('/users/delete/'+$id);
+        request.success(function (data) {
+          console.log(data);
+      	  if(data.status == 1){
+             $("#id-"+$id).hide('slow', function(){ $(this).remove(); });
+           }
+        });
+        request.error(function(serverResponse, status, headers, config) {
+           alert("failure");
+        });
+     };
+   });

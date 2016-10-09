@@ -1,0 +1,11 @@
+extends layout
+block content
+  div(class="container" id="Cool" ng-app="mainApp" ng-controller="formController")
+     h2= title
+     a(href="/users/index") Home
+     &nbsp;&nbsp;|&nbsp;&nbsp;
+     a(href="/users/add") Add User
+     form(method='post', action='/users/addUser')
+        input(type='text', name='name', value='', placeholder='Name' ng-model="name")
+        input(type='text', name='email', value='', placeholder='Email' ng-model="email")
+        input(type='submit', value='{{btname}}' ng-bind="btname")
