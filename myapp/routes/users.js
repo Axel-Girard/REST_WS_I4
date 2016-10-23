@@ -35,7 +35,7 @@ router.get('/index', function(req, res, next) {
 });
 
 router.get('/add', function(req, res, next) {
-	res.render('userAdd', { title: 'Add User'});
+	res.render('userAdd', { title: 'Add User', btname: 'Add user'});
 });
 
 router.get('/update/:id', function(req, res, next) {

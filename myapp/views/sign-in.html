@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
+  <script>
+   $(function() {
+     $('#sign-in-with-twitter').on('click', function() {
+       window.location.href = '127.0.0.1:3000/twitter/request-token';
+     });
+    });
+  </script>
+</head>
+<body>
+   <button id='sign-in-with-twitter'>Sign in with Twitter!</button>
+</body>
+</html>

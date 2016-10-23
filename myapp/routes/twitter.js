@@ -1,5 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var util = require("util");
+var fs = require("fs");
+var path = require('path');
+var url = require('url');
 var colors = require('colors');
 var Twitter = require('twitter');
 
@@ -14,31 +18,30 @@ var tweet_text = "";
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  //var params = {screen_name: 'universejane'};  statuses/user_timeline
-  var params = {include_rts: false, count: '2000'};
+     res.sendFile(path.resolve('views/sign-in.html'));
+});
+
+/* GET users listing. */
+router.get('/tweets', function(req, res, next) {
+  // get time of last week
+  var date = new Date(new Date().getTime() - 60 * 60 * 24 * 7 * 1000);
+  var y = date.getFullYear();
+  var m = date.getMonth() + 1;
+  m = (m < 10 ? "0" : "") + m;
+  var d = date.getDate();
+  d = (d < 10 ? "0" : "") + d;
+  // receive tweets until last week
+  var params = {include_rts: false, since: y+"-"+m+"-"+d};
+  // get the timeline of the logged in member
   client.get('statuses/home_timeline', params, function(error, tweets, response) {
-   if (tweets.length <= 0) {
-    res.send("You follow nobody!");
-   } else if (!error) {
-     tweets.forEach(function(tweet){
-       console.log(tweet.created_at);
-       if(tweet.created_at >= "Sun Oct 09 16:00:00 +0000 2016"){
-         tweet_text += '<div>';
-         tweet_text += '<img src="'+tweet.user.profile_image_url+'" alt="'+tweet.user.id+'">';
-         tweet_text += tweet.text+'<br />';
-         tweet_text += tweet.user.id+'<br />';
-         tweet_text += '<a href="#"><button type="button">Sauvegarder!</button></a>';
-         tweet_text += '<button type="button">Supprimer</button>';
-         tweet_text += '</div>';
-       } else {
-         tweet_text += 'older<br />';
-       }
-     });
-     res.send(tweet_text);
-   } else {
-     res.send("Erreur "+process.env.TWITTER_ACCESS_TOKEN_SECRET);
-   }
- });
+    if (tweets.length <= 0) {
+  		res.render('noTweet', { title: 'You have no tweets'});
+    } else if (!error) {
+  		res.render('userTweets', { title: 'User Information', dataGet: tweets });
+    } else {
+      res.send("Unknowed error");
+    }
+  });
 });
 
 module.exports = router;

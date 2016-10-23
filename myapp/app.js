@@ -45,6 +45,7 @@ app.use(function(req,res,next){
     req.con = con;
     next();
 });
+
 app.use('/', routes);
 app.use('/users', users);
 app.use('/twitter', twitter);
