@@ -14,11 +14,96 @@ var client = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
+// load the auth variables
+var configAuth = require('../config/auth');
+var twitterAPI = require('node-twitter-api');
+var twitter = new twitterAPI({
+    consumerKey: configAuth.twitterAuth.consumerKey,
+    consumerSecret: configAuth.twitterAuth.consumerSecret,
+    callback: configAuth.twitterAuth.callbackURL
+});
+
 var tweet_text = "";
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-     res.sendFile(path.resolve('views/sign-in.html'));
+  var session = req.session;
+  var p1 = new Promise(
+    function(resolve, reject) {
+      twitter.getRequestToken(function(error, requestToken, requestTokenSecret, results){
+        if (error) {
+          console.log("Error getting OAuth request token : " + error);
+          reject("Err");
+        } else {
+          session.requestToken = requestToken;
+          session.requestTokenSecret = requestTokenSecret;
+          resolve(session);
+        }
+      })
+    }
+  );
+
+  p1.then(function(valeur) {
+    session.requestToken = valeur.requestToken;
+    session.requestTokenSecret = valeur.requestTokenSecret;
+
+
+    var p2 = new Promise(
+      function(resolve, reject) {
+        twitter.getAccessToken(requestToken, requestTokenSecret, oauth_verifier, function(error, accessToken, accessTokenSecret, results) {
+          if (error) {
+            console.log(error);
+          } else {
+            //store accessToken and accessTokenSecret somewhere (associated to the user)
+            //Step 4: Verify Credentials belongs here
+            session.accessToken = accessToken;
+            session.accessTokenSecret = accessTokenSecret;
+            resolve(session);
+          }
+        })
+      }
+    );
+
+    p2.then(function(valeur) {
+      session.accessToken = valeur.accessToken;
+      session.accessTokenSecret = valeur.accessTokenSecret;
+      console.log(valeur); // Succes!
+    }, function(raison) {
+      console.log(raison); // Error!
+      res.sendStatus(400);
+    });
+
+
+
+    console.log(valeur); // Succes!
+    res.sendStatus(200);
+  }, function(raison) {
+    console.log(raison); // Error!
+    res.sendStatus(400);
+  });
+});
+
+router.get('/hw', function(req, res, next) {
+  var session = req.session;
+  console.log(session.requestToken);
+  if(session.requestToken){
+    twitter.statuses("update", {
+      status: "Hello world!"
+    },
+    session.requestToken,
+    session.requestTokenSecret,
+    function(error, data, res) {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log("Ça marche, bichette !");
+        res.sendStatus(200);
+      }
+    });
+  } else {
+    console.log("Y'a rien...");
+  }
+  res.send("204");
 });
 
 /* GET users listing. */

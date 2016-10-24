@@ -18,9 +18,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Twitter DB' });
 });
 
-router.get('/auth/twitter', passport.authenticate('twitter', {
-  scope : 'email'
-}));
+router.get('/auth/twitter', passport.authenticate('twitter', { scope : 'email' }));
 
 // handle the callback after twitter has authenticated the user
 router.get('/auth/twitter/callback', passport.authenticate('twitter', {
