@@ -15,6 +15,12 @@ router.use(passport.session()); // persistent login sessions
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  var session = req.session;
+  if(session.user !== undefined && session.user.token !== undefined){
+    res.redirect('/twitter');
+    return;
+  }
+
   res.render('index', { title: 'Corvus' });
 });
 

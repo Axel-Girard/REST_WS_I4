@@ -51,10 +51,12 @@ router.post('/save', function(req, res, next){
     id_user: req.session.user.twitter_id,
     tweetID: req.body.tweetID
   };
+  console.log("A faire: verifier que le tweet n'est pas deja enregistre");
 	var qur = db.query('INSERT INTO twitter set ? ', tweet , function(err,rows){
 		if(err)
       console.log(err);
 		res.redirect('/twitter');
 	});
 });
+
 module.exports = router;
