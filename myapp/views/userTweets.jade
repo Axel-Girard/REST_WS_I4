@@ -13,7 +13,7 @@ block content
           th Action
       tbody
         tr(ng-repeat="todo in todos" id="id-{{todo.id}}")
-          th(scope='row') {{ todo.id }}
+          th(scope='row') {{ todo.id_str }}
           td {{ todo.user.id }}
           td
             img(src= "{{ todo.user.profile_image_url }}")

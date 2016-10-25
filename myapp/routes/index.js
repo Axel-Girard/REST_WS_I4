@@ -23,12 +23,12 @@ router.get('/auth/twitter', passport.authenticate('twitter', { scope : 'email' }
 // handle the callback after twitter has authenticated the user
 router.get('/auth/twitter/callback', passport.authenticate('twitter', {
   successRedirect : '/profile',
-  failureRedirect : '/'
+  failureRedirect : '/profile'
 }));
 
 router.get('/profile', function(req, res, next) {
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(req.session));
+  res.send(JSON.stringify(req.session.tweets));
 });
 
 module.exports = router;

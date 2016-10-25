@@ -124,6 +124,7 @@ router.get('/tweets', function(req, res, next) {
     if (tweets.length <= 0) {
   		res.render('noTweet', { title: 'You have no tweets'});
     } else if (!error) {
+      session.tweets=tweets;
   		res.render('userTweets', { title: 'User Information', dataGet: tweets });
     } else {
       res.send("Unknowed error" + error);
