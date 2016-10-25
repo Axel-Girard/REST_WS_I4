@@ -113,18 +113,33 @@ router.get('/tweets', function(req, res, next) {
     access_token_secret: session.user.tokenSecret
   });
 
-  //var params = {include_rts: false, since: y+"-"+m+"-"+d};
-  // get the timeline of the logged in member
-  client.get('statuses/show/785801965276127200.json?', function(error, tweets, response) {
-    if (tweets.length <= 0) {
-  		res.render('noTweet', { title: 'You have no tweets'});
-    } else if (!error) {
-  		res.render('userTweets', { title: 'User Information', dataGet: tweets });
-    } else {
-			console.log(error);
-      res.send("Unknowed error" + error);
-    }
-  });
+  var db = req.con;
+  var qur = db.query("SELECT * FROM `twitter` WHERE `id_user` = ? ",req.session.profile.id,function (err,rows){
+
+
+var p1 = new Promise(function (resolve, reject){
+  var waitForMe=0;
+  var myTweets=[{test : 'For testing, first obj'}];
+  for (var i = 0; i < rows.length; i++) {
+    waitForMe++;
+    console.log('loop'+i);
+
+    var params = {id:rows[i].id_str};
+    client.get('statuses/show/',params, function(error, tweets, response){
+      myTweets.push(tweets);
+      console.log(tweets.id_str);
+    });
+
+}
+  resolve(myTweets)
+})
+p1.then(function(myTweets){
+  console.log('Promise Then Triggered !');
+  res.render('userSavedTweets', { title: 'Your saved Tweets', dataGet: myTweets});
+
+})
+});
+
 });
 
 module.exports = router;
