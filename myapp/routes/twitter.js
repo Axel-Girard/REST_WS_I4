@@ -57,18 +57,4 @@ router.post('/save', function(req, res, next){
 		res.redirect('/twitter');
 	});
 });
-
-router.get('/fav', function(req, res, next) {
-  var session = req.session;
-  if(!session.user){
-    res.render('index', { title: 'Corvus'});
-    return;
-  }
-  if(!session.user.token){
-    res.render('index', { title: 'Corvus'});
-    return;
-  }
-
-  res.redirect('/twitter');
-});
 module.exports = router;
