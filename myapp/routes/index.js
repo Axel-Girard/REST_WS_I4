@@ -15,15 +15,15 @@ router.use(passport.session()); // persistent login sessions
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Twitter DB' });
+  res.render('index', { title: 'Corvus' });
 });
 
 router.get('/auth/twitter', passport.authenticate('twitter', { scope : 'email' }));
 
 // handle the callback after twitter has authenticated the user
 router.get('/auth/twitter/callback', passport.authenticate('twitter', {
-  successRedirect : '/profile',
-  failureRedirect : '/profile'
+  successRedirect : '/twitter',
+  failureRedirect : '/'
 }));
 
 router.get('/profile', function(req, res, next) {

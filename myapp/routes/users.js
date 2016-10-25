@@ -4,20 +4,8 @@ var util = require("util");
 var fs = require("fs");
 var path = require('path');
 var url = require('url');
-
 var Twitter = require('twitter');
-
-
-
-// load the auth variables
 var configAuth = require('../config/auth');
-var twitterAPI = require('node-twitter-api');
-var twitter = new twitterAPI({
-    consumerKey: configAuth.twitterAuth.consumerKey,
-    consumerSecret: configAuth.twitterAuth.consumerSecret,
-    callback: configAuth.twitterAuth.callbackURL
-});
-
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -106,6 +94,15 @@ console.log("Query "+qur.sql);
 
 router.get('/tweets', function(req, res, next) {
   var session = req.session;
+  if(!session.user){
+    res.render('index', { title: 'Corvus'});
+    return;
+  }
+  if(!session.user.token){
+    res.render('index', { title: 'Corvus'});
+    return;
+  }
+
   var client = new Twitter({
     consumer_key: configAuth.twitterAuth.consumerKey,
     consumer_secret: configAuth.twitterAuth.consumerSecret,

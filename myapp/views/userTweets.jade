@@ -20,8 +20,10 @@ block content
           td {{ todo.text }}
           td
             button(ng-click="deleteData(todo.id)") delete
-            &nbsp;| &nbsp;
-            button(ng-click="saveData(todo.id)") save
+            | &nbsp; | &nbsp;
+            form(method='post', action='/twitter/save')
+              input(type='text', name='tweetID', value='{{ todo.id_str }}', class="hidden")
+              input(type='submit', value='fav' ng-bind="btname")
 
   script(type="text/javascript").
    var data=!{JSON.stringify(dataGet)};
