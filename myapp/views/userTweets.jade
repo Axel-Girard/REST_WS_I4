@@ -1,9 +1,7 @@
 extends layout
 block content
   div(class="container" id="Cool" ng-app="mainApp")
-     h2#header("property"="pValue") Users
-     div
-        a(href="/users/add") Add User
+     h2#header("property"="pValue") Tweets
      h3 Response
      table.table(ng-controller="TodoController")
       thead
@@ -23,7 +21,7 @@ block content
           td
             button(ng-click="deleteData(todo.id)") delete
             &nbsp;| &nbsp;
-            a(href="/twitter/update/{{todo.id}}") Edit
+            button(ng-click="saveData(todo.id)") save
 
   script(type="text/javascript").
    var data=!{JSON.stringify(dataGet)};
@@ -31,14 +29,11 @@ block content
    mainApp.controller("TodoController", function($scope, $http) {
      $scope.todos = !{JSON.stringify(dataGet)};
      $scope.deleteData = function($id){
-        var request = $http.delete('/twitter/delete/'+$id);
-        request.success(function (data) {
-      	  if(data.status == 1){
-             $("#id-"+$id).hide('slow', function(){ $(this).remove(); });
-           }
-        });
-        request.error(function(serverResponse, status, headers, config) {
-           alert("failure");
-        });
+        var row = document.getElementById('id-'+$id);
+        row.hidden = true;
+        console.log(row);
+     };
+     $scope.saveData = function($id){
+        // todo (envoyer une requete en post à une route à créer)
      };
    });

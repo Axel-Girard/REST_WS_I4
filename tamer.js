@@ -39,5 +39,5 @@ function testPromise() {
       });
 
   log.insertAdjacentHTML('beforeend', thisComptePromesse +
-      ') Promise made (<small>Fin du code synchrone</small>)<br/>');
+      ' Promise made (<small>Fin du code synchrone</small>)<br/>');
 }

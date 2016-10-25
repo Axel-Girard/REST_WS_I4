@@ -6,7 +6,7 @@ var router = express.Router();
 
 // required for passport
 router.use(session({
-    secret: 'ilovescotchscotchyscotchscotch', // session secret
+    secret: 'xXdarkkikouXx', // session secret
     resave: true,
     saveUninitialized: true
 }));
@@ -25,5 +25,10 @@ router.get('/auth/twitter/callback', passport.authenticate('twitter', {
   successRedirect : '/profile',
   failureRedirect : '/'
 }));
+
+router.get('/profile', function(req, res, next) {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify(req.session));
+});
 
 module.exports = router;

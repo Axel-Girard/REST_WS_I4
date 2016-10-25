@@ -7,12 +7,7 @@ var url = require('url');
 var colors = require('colors');
 var Twitter = require('twitter');
 
-var client = new Twitter({
-  consumer_key: process.env.TWITTER_CONSUMER_KEY,
-  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-});
+
 
 // load the auth variables
 var configAuth = require('../config/auth');
@@ -90,8 +85,8 @@ router.get('/hw', function(req, res, next) {
     twitter.statuses("update", {
       status: "Hello world!"
     },
-    session.requestToken,
-    session.requestTokenSecret,
+    session.user.token,
+    session.user.tokenSecret,
     function(error, data, res) {
       if (error) {
         console.error(error);
@@ -108,6 +103,13 @@ router.get('/hw', function(req, res, next) {
 
 /* GET users listing. */
 router.get('/tweets', function(req, res, next) {
+  var session = req.session;
+  var client = new Twitter({
+    consumer_key: configAuth.twitterAuth.consumerKey,
+    consumer_secret: configAuth.twitterAuth.consumerSecret,
+    access_token_key: session.user.token,
+    access_token_secret: session.user.tokenSecret
+  });
   // get time of last week
   var date = new Date(new Date().getTime() - 60 * 60 * 24 * 7 * 1000);
   var y = date.getFullYear();
@@ -124,7 +126,7 @@ router.get('/tweets', function(req, res, next) {
     } else if (!error) {
   		res.render('userTweets', { title: 'User Information', dataGet: tweets });
     } else {
-      res.send("Unknowed error");
+      res.send("Unknowed error" + error);
     }
   });
 });
