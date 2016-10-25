@@ -111,31 +111,34 @@ router.get('/tweets', function(req, res, next) {
   });
 
   var db = req.con;
-  var qur = db.query("SELECT * FROM `twitter` WHERE `id_user` = ? ",req.session.profile.id,function (err,rows){
+  var qur = db.query("SELECT * FROM `twitter` WHERE `id_user` = ? ", session.profile.id,
+    function (err,rows){
 
+      var p1 = new Promise(function (resolve, reject){
+        var waitForMe=0;
+        var myTweets=[{test : 'For testing, first obj'}];
+        for (var i = 0; i < rows.length; i++) {
+          waitForMe++;
+          console.log('loop'+i);
 
-var p1 = new Promise(function (resolve, reject){
-  var waitForMe=0;
-  var myTweets=[{test : 'For testing, first obj'}];
-  for (var i = 0; i < rows.length; i++) {
-    waitForMe++;
-    console.log('loop'+i);
+          var params = {id:rows[i].id_str};
+          client.get('statuses/show/',params, function(error, tweets, response){
+            myTweets.push(tweets);
+            console.log(tweets.id_str);
+          });
 
-    var params = {id:rows[i].id_str};
-    client.get('statuses/show/',params, function(error, tweets, response){
-      myTweets.push(tweets);
-      console.log(tweets.id_str);
-    });
+        }
+        resolve(myTweets)
+      })
 
-}
-  resolve(myTweets)
-})
-p1.then(function(myTweets){
-  console.log('Promise Then Triggered !');
-  res.render('userSavedTweets', { title: 'Your saved Tweets', dataGet: myTweets});
-
-})
-});
+      p1.then(function(myTweets){
+        console.log('Promise Then Triggered !');
+        res.render('userSavedTweets', {
+          title: 'Your saved Tweets',
+          dataGet: myTweets
+        });
+      })
+  });
 
 });
 
