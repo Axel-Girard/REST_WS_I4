@@ -5,6 +5,20 @@ var fs = require("fs");
 var path = require('path');
 var url = require('url');
 
+var Twitter = require('twitter');
+
+
+
+// load the auth variables
+var configAuth = require('../config/auth');
+var twitterAPI = require('node-twitter-api');
+var twitter = new twitterAPI({
+    consumerKey: configAuth.twitterAuth.consumerKey,
+    consumerSecret: configAuth.twitterAuth.consumerSecret,
+    callback: configAuth.twitterAuth.callbackURL
+});
+
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 	var db = req.con;
@@ -88,6 +102,29 @@ router.post('/addUser', function(req, res, next) {
 
 console.log("Query "+qur.sql);
 
+});
+
+router.get('/tweets', function(req, res, next) {
+  var session = req.session;
+  var client = new Twitter({
+    consumer_key: configAuth.twitterAuth.consumerKey,
+    consumer_secret: configAuth.twitterAuth.consumerSecret,
+    access_token_key: session.user.token,
+    access_token_secret: session.user.tokenSecret
+  });
+
+  //var params = {include_rts: false, since: y+"-"+m+"-"+d};
+  // get the timeline of the logged in member
+  client.get('statuses/show/785801965276127200.json?', function(error, tweets, response) {
+    if (tweets.length <= 0) {
+  		res.render('noTweet', { title: 'You have no tweets'});
+    } else if (!error) {
+  		res.render('userTweets', { title: 'User Information', dataGet: tweets });
+    } else {
+			console.log(error);
+      res.send("Unknowed error" + error);
+    }
+  });
 });
 
 module.exports = router;
