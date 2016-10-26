@@ -24,14 +24,14 @@ router.get('/', function(req, res, next) {
     access_token_secret: session.user.tokenSecret
   });
   // get time of last week
-  var date = new Date(new Date().getTime() - 60 * 60 * 24 * 7 * 1000);
+  var date = new Date(new Date().getTime() - 60 * 60 * 24 * 1000);
   var y = date.getFullYear();
   var m = date.getMonth() + 1;
   m = (m < 10 ? "0" : "") + m;
   var d = date.getDate();
   d = (d < 10 ? "0" : "") + d;
   // receive tweets until last week
-  var params = {include_rts: false, since: y+"-"+m+"-"+d};
+  var params = {include_rts: false, since: y+"-"+m+"-"+d, count: 1000};
   // get the timeline of the logged in member
   client.get('statuses/home_timeline', params, function(error, tweets, response) {
     if (tweets.length <= 0) {

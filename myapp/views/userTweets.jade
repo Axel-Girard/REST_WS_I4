@@ -2,7 +2,6 @@ extends layout
 block content
   div(class="container" id="Cool" ng-app="mainApp")
      h2#header("property"="pValue") Tweets
-     h3 Response
      table.table(ng-controller="TodoController")
       thead
         tr
@@ -19,11 +18,10 @@ block content
             img(src= "{{ todo.user.profile_image_url }}")
           td {{ todo.text }}
           td
-            button(ng-click="deleteData(todo.id)") delete
-            | &nbsp; | &nbsp;
             form(method='post', action='/twitter/save')
               input(type='text', name='tweetID', value='{{ todo.id_str }}', class="hidden")
-              input(type='submit', value='fav' ng-bind="btname")
+              input(type='submit', value='fav' ng-bind="btname" class="btn btn-success")
+            button(ng-click="deleteData(todo.id)" class="btn btn-warning") delete
 
   script(type="text/javascript").
    var data=!{JSON.stringify(dataGet)};
