@@ -34,3 +34,8 @@ footer{
   padding: 5px;
   font-weight: bold;
 }
+
+.info{
+  padding: 10px 30px;
+  line-height: 13px;
+}
