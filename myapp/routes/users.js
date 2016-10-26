@@ -115,31 +115,36 @@ router.get('/tweets', function(req, res, next) {
     function (err,rows){
 
       var p1 = new Promise(function (resolve, reject){
-        var waitForMe=0;
         var myTweets=[{test : 'For testing, first obj'}];
         for (var i = 0; i < rows.length; i++) {
-          waitForMe++;
-          console.log('loop'+i);
-
-          var params = {id:rows[i].id_str};
-          client.get('statuses/show/',params, function(error, tweets, response){
-            myTweets.push(tweets);
-            console.log(tweets.id_str);
+					var p2 = new Promise (function (resolve, reject){
+          console.log(rows[i]);
+          var params = {id:rows[i].tweetID};
+          client.get('statuses/show/',params, function(error, tweet, response){
+            myTweets.push(tweet);
           });
 
-        }
-        resolve(myTweets)
-      })
+					p2.resolve(tweet);
+        });
+				p2.then(function(tweet){
+					console.log('lapin');
+					myTweets.push(tweet);
+				})
+			}
+			p1.resolve(myTweets);
+		})
+
+
+
 
       p1.then(function(myTweets){
         console.log('Promise Then Triggered !');
-        res.render('userSavedTweets', {
+				console.log(myTweets[1]);
+        res.render('userTweets', {
           title: 'Your saved Tweets',
           dataGet: myTweets
         });
       })
   });
-
-});
-
+  });
 module.exports = router;
