@@ -1,6 +1,7 @@
 extends layout
 block content
   div(class="container" id="Cool" ng-app="mainApp")
+    h1#SavedTweet(hidden) Mes Tweets Sauvegardé
      h2#header("property"="pValue") Tweets
      h3 Response
      table.table(ng-controller="TodoController")
@@ -29,7 +30,9 @@ block content
    var data=!{JSON.stringify(dataGet)};
    var mainApp = angular.module("mainApp", []);
    mainApp.controller("TodoController", function($scope, $http) {
-     $scope.displayDelete=location.pathname!="/twitter";
+     $scope.displayDelete=location.pathname=="/users/tweets";
+     if($scope.displayDelete)
+     $('#SavedTweet').show(1000);
      $scope.todos = !{JSON.stringify(dataGet)};
      $scope.deleteData = function(id){
         $.post("/users/kill",{tweetID:id});
