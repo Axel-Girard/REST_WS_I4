@@ -93,58 +93,44 @@ console.log("Query "+qur.sql);
 });
 
 router.get('/tweets', function(req, res, next) {
-  var session = req.session;
-  if(!session.user){
-    res.render('index', { title: 'Corvus'});
-    return;
-  }
-  if(!session.user.token){
-    res.render('index', { title: 'Corvus'});
-    return;
-  }
+	var session = req.session;
+	if(!session.user ||!session.user.token){
+		res.render('index', { title: 'Corvus'});
+		return;
+	}
 
-  var client = new Twitter({
-    consumer_key: configAuth.twitterAuth.consumerKey,
-    consumer_secret: configAuth.twitterAuth.consumerSecret,
-    access_token_key: session.user.token,
-    access_token_secret: session.user.tokenSecret
-  });
+	var client = new Twitter({
+		consumer_key: configAuth.twitterAuth.consumerKey,
+		consumer_secret: configAuth.twitterAuth.consumerSecret,
+		access_token_key: session.user.token,
+		access_token_secret: session.user.tokenSecret
+	});
 
-  var db = req.con;
-  var qur = db.query("SELECT * FROM `twitter` WHERE `id_user` = ? ", session.profile.id,
-    function (err,rows){
+	var db = req.con;
+	var qur = db.query("SELECT * FROM `twitter` WHERE `id_user` = ? ", session.profile.id,
+	function (err,rows){
+		var waitForAllTweets=0;
 
-      var p1 = new Promise(function (resolve, reject){
-        var myTweets=[{test : 'For testing, first obj'}];
-        for (var i = 0; i < rows.length; i++) {
-					var p2 = new Promise (function (resolve, reject){
-          console.log(rows[i]);
-          var params = {id:rows[i].tweetID};
-          client.get('statuses/show/',params, function(error, tweet, response){
-            myTweets.push(tweet);
-          });
-
-					p2.resolve(tweet);
-        });
+		var p1 = new Promise(function (resolve, reject){
+			var myTweets=[];
+			for (var i = 0; i < rows.length; i++) {
+				var p2 = new Promise (function (resolve, reject){
+					var params = {id:rows[i].tweetID};
+					client.get('statuses/show/',params, function(error, tweet, response){
+						resolve(tweet);
+					});
+				});
 				p2.then(function(tweet){
-					console.log('lapin');
 					myTweets.push(tweet);
+					waitForAllTweets++;
+					if(waitForAllTweets==rows.length)
+					resolve(myTweets);
 				})
 			}
-			p1.resolve(myTweets);
 		})
-
-
-
-
-      p1.then(function(myTweets){
-        console.log('Promise Then Triggered !');
-				console.log(myTweets[1]);
-        res.render('userTweets', {
-          title: 'Your saved Tweets',
-          dataGet: myTweets
-        });
-      })
-  });
-  });
+		p1.then(function(myTweets){
+			res.render('userTweets', {title: 'Your saved Tweets',dataGet: myTweets});
+		})
+	});
+});
 module.exports = router;
