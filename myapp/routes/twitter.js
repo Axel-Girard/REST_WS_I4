@@ -40,7 +40,8 @@ router.get('/', function(req, res, next) {
       session.tweets=tweets;
   		res.render('userTweets', { title: 'User Information', dataGet: tweets });
     } else {
-      res.send("Unknowed error" + error);
+      console.log(error);
+      res.send("Unknowed error" +error[0].code + ' ::' + error[0].message);
     }
   });
 });

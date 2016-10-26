@@ -133,4 +133,13 @@ router.get('/tweets', function(req, res, next) {
 		})
 	});
 });
+
+router.post('/kill', function(req, res, next){
+	var db = req.con;
+	var quer = db.query('DELETE FROM twitter WHERE tweetID= ? ', req.body.tweetID , function(err,rows){
+		if(err)
+		console.log('Une erreur est survenue');
+      console.log(err);
+	});
+});
 module.exports = router;
