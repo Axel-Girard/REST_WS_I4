@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h2 You break the internet!
+  h2= message
+  h3= error.status
+  pre #{error.stack}
+  footer
+    a(href='http://www.yodablog.net/?p=3233') bonus

@@ -1,0 +1,33 @@
+extends layout
+block content
+  div(class="container" id="Cool" ng-app="mainApp")
+    h2 Your saved tweets
+     h3
+      a(href='/users/timeline') Your timeline
+     table.table(ng-controller="TodoController")
+      thead
+        tr
+          th
+          th Name
+          th Tweet
+          th Action
+      tbody
+        tr(ng-repeat="todo in todos" id="id-{{todo.id}}", ng-hide="hideRow")
+          td
+            img(src= "{{ todo.user.profile_image_url }}")
+          td {{ todo.user.name }}
+          td {{ todo.text }}
+          td
+            button(ng-click="hideRow=true; deleteData(todo.id_str)" class="btn btn-warning") Delete
+
+  script(type="text/javascript").
+   var data=!{JSON.stringify(dataGet)};
+   var mainApp = angular.module("mainApp", []);
+   mainApp.controller("TodoController", function($scope, $http) {
+     if($scope.displayDelete)
+     $('#SavedTweet').show(1000);
+     $scope.todos = !{JSON.stringify(dataGet)};
+     $scope.deleteData = function(id){
+        $.post("/users/kill",{tweetID:id});
+     };
+   });

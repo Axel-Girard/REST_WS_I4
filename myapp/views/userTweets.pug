@@ -1,0 +1,33 @@
+extends layout
+block content
+  div(class="container" id="Cool" ng-app="mainApp")
+    h2 Your timeline
+    h3
+      a(href='/users/tweets') Your saved tweets
+    table.table(ng-controller="TodoController")
+      thead
+        tr
+          th
+          th Name
+          th Tweet
+          th Action
+      tbody
+        tr(ng-repeat="todo in todos" id="id-{{todo.id}}")
+          td
+            img(src= "{{ todo.user.profile_image_url }}")
+          td {{ todo.user.name }}
+          td {{ todo.text }}
+          td
+            button(ng-click="hideBtn=true; hideSaved=false; saveData(todo.id_str)" class="btn btn-success", ng-hide="hideBtn") Save
+            button(class="btn btn-success" disabled ng-hide="hideSaved") Saved
+
+  script(type="text/javascript").
+   var data=!{JSON.stringify(dataGet)};
+   var mainApp = angular.module("mainApp", []);
+   mainApp.controller("TodoController", function($scope, $http) {
+     $scope.todos = !{JSON.stringify(dataGet)};
+     $scope.saveData = function(id){
+        $.post("/users/save",{tweetID:id});
+     };
+     $scope.hideSaved = true;
+   });
