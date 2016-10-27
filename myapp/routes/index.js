@@ -45,6 +45,8 @@ router.get('/timeline', function(req, res, next) {
 		  res.send(JSON.stringify({ title: 'Unknowed error', error: error }));
     }
   });
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({ title: 'Unknowed error' }));
 });
 
 router.get('/tweets', function(req, res, next) {
