@@ -65,6 +65,11 @@ router.get('/tweets', function(req, res, next) {
 	var db = req.con;
 	var qur = db.query("SELECT * FROM `twitter` WHERE `id_user` = ? ", session.profile.id,
 	function (err,rows){
+		if(rows.length < 1){
+			res.render('noTweet', { title: 'You have no tweets'});
+			return;
+		}
+
 		var waitForAllTweets=0;
 
 		var p1 = new Promise(function (resolve, reject){
@@ -114,8 +119,9 @@ router.post('/save', function(req, res, next){
 	});
 });
 
-router.post('/kill', function(req, res, next){
+router.delete('/kill', function(req, res, next){
 	var db = req.con;
+	console.log(req.body.tweetID);
 	db.query('DELETE FROM twitter WHERE tweetID= ? ', req.body.tweetID , function(err,rows){
 		if(err)
 		console.log('Une erreur est survenue');

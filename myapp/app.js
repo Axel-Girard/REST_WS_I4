@@ -11,10 +11,10 @@ var users = require('./routes/users');
 // database
 var mysql = require('mysql');
 var con = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : '',
-  database : 'nodeDb'
+  host     : 'nt71li6axbkq1q6a.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+  user     : 'v98zns9ad5sl7kz0',
+  password : 'mcxuxm2f3r6uu6kj',
+  database : 'boey0ihsx8i7hawt'
 });
 con.connect(function(err){
   if(err){
@@ -52,20 +52,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
 
 // production error handler
 // no stacktraces leaked to user

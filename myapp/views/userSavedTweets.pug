@@ -18,7 +18,7 @@ block content
           td {{ todo.user.name }}
           td {{ todo.text }}
           td
-            button(ng-click="hideRow=true; deleteData(todo.id_str)" class="btn btn-warning") Delete
+            button(ng-click="hideRow=true; deleteData(todo.id_str)" class="btn btn-danger") Delete
 
   script(type="text/javascript").
    var data=!{JSON.stringify(dataGet)};
@@ -28,6 +28,12 @@ block content
      $('#SavedTweet').show(1000);
      $scope.todos = !{JSON.stringify(dataGet)};
      $scope.deleteData = function(id){
-        $.post("/users/kill",{tweetID:id});
+      $.ajax({
+        type: "DELETE",
+        url: "/users/kill",
+        data: {tweetID:id},
+        dataType: 'json'
+      });
+      // $.post("/users/kill",{tweetID:id});
      };
    });
