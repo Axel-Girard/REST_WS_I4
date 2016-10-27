@@ -1,0 +1,41 @@
+body {
+  padding: 50px;
+  width: 100%;
+}
+
+header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width:100%;
+  height: 100px;
+  background-color: rgb(50, 51, 61);
+}
+
+h1, .title {
+  margin:auto;
+  display: inline;
+  margin-left: 20px;
+  color: aliceblue;
+  text-shadow: 2px 2px 5px black;
+}
+
+main{
+  margin-top: 110px;
+}
+
+footer{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width:100%;
+  background-color: rgb(223, 236, 245);
+  text-align: right;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.info{
+  padding: 10px 30px;
+  line-height: 13px;
+}
