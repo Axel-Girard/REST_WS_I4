@@ -8,8 +8,6 @@ router.use(session({
     resave: true,
     saveUninitialized: true
 }));
-router.use(passport.initialize());
-router.use(passport.session());
 
 
 /* GET users listing. */
