@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 var Twitter = require('twitter');
 var configAuth = require('../config/auth');
-
+var http=require ('http');
+var querystring= require('querystring');
 router.get('/', function(req, res, next) {
 	res.redirect('/users/timeline');
 });
@@ -29,19 +30,36 @@ router.get('/timeline', function(req, res, next) {
   var d = date.getDate();
   d = (d < 10 ? "0" : "") + d;
   // receive tweets until last week
-  var params = {session:session, include_rts: false, since: y+"-"+m+"-"+d, count: 1000};
+  // var params = {session:session, include_rts: false, since: y+"-"+m+"-"+d, count: 1000};
   // get the timeline of the logged in member
-  http.get('http://localhost:3000/timeline', params, function(error, tweets, response) {
-    if (tweets.length <= 0) {
-  		res.render('noTweet', { title: 'You have no tweets'});
-    } else if (!error) {
-      session.tweets=tweets;
-  		res.render('userTweets', { title: 'User Information', dataGet: tweets });
-    } else {
-      console.log(error);
-      res.send("Unknowed error" +error[0].code + ' ::' + error[0].message);
-    }
-  });
+var get_data = querystring.stringify(session);
+	var options = {
+	  hostname: 'localhost',
+	  port: 3000,
+	  path: '/timeline',
+	  method: 'GET'
+	};
+
+	var get_req = http.request(options, function(res){
+		res.on('data', function(tweets){
+			res.render('userTweets', { title: 'User Information', dataGet: tweets });
+
+		});
+	});
+
+	get_req.write(get_data);
+	get_req.end();
+
+  // http.get('', params, function(error, tweets, response) {
+  //   if (tweets.length <= 0) {
+  // 		res.render('noTweet', { title: 'You have no tweets'});
+  //   } else if (!error) {
+  //     session.tweets=tweets;
+  //   } else {
+  //     console.log(error);
+  //     res.send("Unknowed error" +error[0].code + ' ::' + error[0].message);
+  //   }
+  // });
 });
 
 router.get('/tweets', function(req, res, next) {
