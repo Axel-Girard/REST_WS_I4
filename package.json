@@ -1,0 +1,19 @@
+{
+  "name": "rest_ws_i4",
+  "version": "1.0.0",
+  "description": "![alt tag](https://media.giphy.com/media/dOnER85jWuW2c/giphy.gif)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Axel-Girard/REST_WS_I4.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Axel-Girard/REST_WS_I4/issues"
+  },
+  "homepage": "https://github.com/Axel-Girard/REST_WS_I4#readme"
+}
