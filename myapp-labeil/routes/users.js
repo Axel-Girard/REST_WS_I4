@@ -29,9 +29,9 @@ router.get('/timeline', function(req, res, next) {
   var d = date.getDate();
   d = (d < 10 ? "0" : "") + d;
   // receive tweets until last week
-  var params = {include_rts: false, since: y+"-"+m+"-"+d, count: 1000};
+  var params = {session:session, include_rts: false, since: y+"-"+m+"-"+d, count: 1000};
   // get the timeline of the logged in member
-  client.get('statuses/home_timeline', params, function(error, tweets, response) {
+  http.get('http://localhost:3000/timeline', params, function(error, tweets, response) {
     if (tweets.length <= 0) {
   		res.render('noTweet', { title: 'You have no tweets'});
     } else if (!error) {

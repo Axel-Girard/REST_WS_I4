@@ -24,8 +24,6 @@ block content
    var data=!{JSON.stringify(dataGet)};
    var mainApp = angular.module("mainApp", []);
    mainApp.controller("TodoController", function($scope, $http) {
-     if($scope.displayDelete)
-     $('#SavedTweet').show(1000);
      $scope.todos = !{JSON.stringify(dataGet)};
      $scope.deleteData = function(id){
       $.ajax({
