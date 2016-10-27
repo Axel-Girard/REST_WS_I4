@@ -3,15 +3,12 @@ var router = express.Router();
 var Twitter = require('twitter');
 var configAuth = require('../config/auth');
 
-router.get('/', function(req, res, next) {
-	res.redirect('/users/timeline');
-});
-
 /* GET users listing. */
 router.get('/timeline', function(req, res, next) {
   var session = req.session;
 	if(!session.user || !session.user.token){
-    res.render('index');
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ title: 'User Information', error: "not connected" }));
     return;
   }
 
@@ -32,14 +29,13 @@ router.get('/timeline', function(req, res, next) {
   var params = {include_rts: false, since: y+"-"+m+"-"+d, count: 1000};
   // get the timeline of the logged in member
   client.get('statuses/home_timeline', params, function(error, tweets, response) {
-    if (tweets.length <= 0) {
-  		res.render('noTweet', { title: 'You have no tweets'});
-    } else if (!error) {
-      session.tweets=tweets;
-  		res.render('userTweets', { title: 'User Information', dataGet: tweets });
+    if (!error) {
+	    res.setHeader('Content-Type', 'application/json');
+	    res.send(JSON.stringify({ title: 'User Information', tweets: tweets }));
     } else {
       console.log(error);
-      res.send("Unknowed error" +error[0].code + ' ::' + error[0].message);
+		  res.setHeader('Content-Type', 'application/json');
+		  res.send(JSON.stringify({ title: 'Unknowed error', error: error }));
     }
   });
 });
@@ -90,7 +86,8 @@ router.get('/tweets', function(req, res, next) {
 			}
 		})
 		p1.then(function(myTweets){
-			res.render('userSavedTweets', {title: 'Your saved Tweets',dataGet: myTweets});
+	    res.setHeader('Content-Type', 'application/json');
+	    res.send(JSON.stringify({title: 'Your saved Tweets',dataGet: myTweets}));
 		})
 	});
 });
